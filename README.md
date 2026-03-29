@@ -30,4 +30,6 @@
 3.  Run: `mvn spring-boot:run`
 
 ---
-Developed by **Hashan 7** | 2026
+<div align="center">
+<h3> Developed by h7 💜</h3>
+</div>
