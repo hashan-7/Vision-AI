@@ -69,6 +69,7 @@ public class UserController {
             response.put("success", false);
             return ResponseEntity.status(401).body(response);
         }
+        
 
         try {
             String googleId = principal.getAttribute("sub");
