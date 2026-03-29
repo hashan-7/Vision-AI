@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Dashboard | Creative Suite</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --bg-color: #050507;
+            --glass-bg: rgba(255, 255, 255, 0.025);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent-white: #ffffff;
+            --muted-gray: #71717a;
+            --luxury-line: rgba(255, 255, 255, 0.04);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--accent-white);
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(var(--luxury-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--luxury-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .navbar-floating {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 800px;
+            z-index: 1000;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 10px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .h7-logo {
+            font-family: "Rage Italic", "Rage", cursive;
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #dcd7d7 0%, #e2dada 30%, #fff 50%, #d0cdcd 70%, #e0dddd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: lowercase;
+            line-height: 1;
+        }
+
+        .nav-links { display: flex; gap: 25px; align-items: center; }
+        .nav-links a { color: var(--muted-gray); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: #fff; }
+
+        .bg-blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+            filter: blur(100px);
+            z-index: -1;
+            pointer-events: none;
+        }
+        .blob-1 { top: -10%; right: 0; }
+        .blob-2 { bottom: 0; left: -10%; opacity: 0.5; }
+
+        .liquid-glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+        }
+
+        .user-profile img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.2);
+            object-fit: cover;
+            aspect-ratio: 1/1;
+            background: #222;
+        }
+
+        .form-control {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            border-radius: 15px;
+            padding: 15px;
+        }
+        .form-control:focus {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.3);
+            color: #fff;
+            box-shadow: none;
+        }
+
+        .gen-btn {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 15px;
+            border-radius: 25px;
+            font-weight: 700;
+            width: 100%;
+            transition: 0.3s;
+        }
+        .gen-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255,255,255,0.15);
+        }
+        .gen-btn:disabled {
+            background: #27272a;
+            color: #71717a;
+            cursor: not-allowed;
+        }
+
+        .result-box {
+            min-height: 450px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        #res-img {
+            max-width: 100%;
+            border-radius: 15px;
+            display: none;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .loader-container {
+            display: none;
+            text-align: center;
+        }
+        .premium-loader {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255, 255, 255, 0.05);
+            border-top: 3px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            margin: 0 auto 20px;
+        }
+        .loader-text {
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            color: var(--muted-gray);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .credit-badge {
+            background: rgba(255,255,255,0.05);
+            padding: 5px 15px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            border: 1px solid var(--glass-border);
+            cursor: help;
+        }
+
+        #refresh-hint {
+            display: none;
+            font-size: 0.75rem;
+            color: #fbbf24;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-card { max-width: 400px; width: 90%; text-align: center; }
+
+        footer { padding: 40px 0; text-align: center; color: var(--muted-gray); border-top: 1px solid var(--luxury-line); margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+
+    <nav class="navbar-floating">
+        <div class="h7-logo">h7</div>
+        <div class="nav-links">
+            <a href="/dashboard.html" class="active">Home</a>
+            <a href="/gallery.html">Gallery</a>
+            <a href="/settings.html">Settings</a>
+            <a href="#" onclick="showLogoutModal()" class="text-danger">Logout</a>
+        </div>
+        <div class="user-profile"><img id="u-pic" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Profile"></div>
+    </nav>
+
+    <main class="container" style="padding-top: 220px;">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="liquid-glass h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold m-0">Engine</h5>
+                        <div class="credit-badge">
+                            <i class="bi bi-lightning-fill"></i> <span id="u-credits">0</span> / 10
+                        </div>
+                    </div>
+                    <form id="gen-form">
+                        <div class="mb-4">
+                            <label class="small text-secondary mb-2">PROMPT ARCHITECTURE</label>
+                            <textarea id="u-prompt" class="form-control" rows="6" placeholder="A futuristic cyberpunk city in rain, cinematic lighting, 8k..." required></textarea>
+                        </div>
+                        <button type="submit" id="btn-submit" class="gen-btn">Generate</button>
+                        <div id="refresh-hint"></div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="liquid-glass result-box" id="res-box">
+                    <div class="loader-container" id="loader-container">
+                        <div class="premium-loader"></div>
+                        <div class="loader-text">Creating your vision...</div>
+                    </div>
+                    <img src="" id="res-img" alt="Generated Output">
+                    <p id="res-empty" class="text-secondary small">Awaiting neural input...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="logout-modal" class="modal-overlay">
+        <div class="liquid-glass modal-card">
+            <h5 class="fw-bold mb-3">Terminate Session?</h5>
+            <p class="text-secondary small mb-4">Are you sure you want to log out of vision Creative Suite?</p>
+            <div class="d-flex gap-2">
+                <button onclick="confirmLogout()" class="gen-btn">Logout</button>
+                <button onclick="hideLogoutModal()" class="gen-btn" style="background: transparent; border: 1px solid #fff; color: #fff;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="alert-modal" class="modal-overlay">
+        <div class="liquid-glass modal-card">
+            <h5 id="alert-title" class="fw-bold mb-3">Notice</h5>
+            <p id="alert-msg" class="text-secondary small mb-4"></p>
+            <button onclick="hideAlert()" class="gen-btn">Understood</button>
+        </div>
+    </div>
+
+    <footer><p>© 2026. A premium product by vision Creative Suite</p></footer>
+
+    <script>
+    let userId = null;
+
+    function showLogoutModal() { document.getElementById('logout-modal').style.display = 'flex'; }
+    function hideLogoutModal() { document.getElementById('logout-modal').style.display = 'none'; }
+    function confirmLogout() { window.location.href = '/logout'; }
+
+    function showAlert(title, msg) {
+        document.getElementById('alert-title').innerText = title;
+        document.getElementById('alert-msg').innerText = msg;
+        document.getElementById('alert-modal').style.display = 'flex';
+    }
+    function hideAlert() { document.getElementById('alert-modal').style.display = 'none'; }
+
+    async function init() {
+        try {
+            const r = await fetch('/api/user/success');
+            if (!r.ok) throw new Error("Auth required");
+            
+            const d = await r.json();
+            
+            if(d.success) {
+                userId = d.userId;
+                const credits = d.credits;
+                const btn = document.getElementById('btn-submit');
+                const hint = document.getElementById('refresh-hint');
+                const profImg = document.getElementById('u-pic');
+                
+                document.getElementById('u-credits').innerText = credits;
+                
+                if(credits <= 0) {
+                    btn.disabled = true;
+                    btn.innerText = "Limit Reached";
+                    
+                    if (d.nextRefreshAt) {
+                        const refreshDate = new Date(d.nextRefreshAt);
+                        const formattedTime = refreshDate.toLocaleString('en-US', { 
+                            month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+                        });
+                        hint.innerHTML = `<i class="bi bi-clock-history me-1"></i> Credits refresh on: ${formattedTime}`;
+                        hint.style.display = 'block';
+                    }
+                } else {
+                    btn.disabled = false;
+                    btn.innerText = "Generate";
+                    hint.style.display = 'none';
+                }
+
+                if(profImg) {
+                    profImg.src = d.pictureUrl || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                    profImg.onerror = function() {
+                        this.src = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                    };
+                }
+            } else { 
+                window.location.href = '/'; 
+            }
+        } catch(e) { 
+            window.location.href = '/'; 
+        }
+    }
+
+    document.getElementById('gen-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const p = document.getElementById('u-prompt').value;
+        const b = document.getElementById('btn-submit');
+        const img = document.getElementById('res-img');
+        const ldr = document.getElementById('loader-container');
+        const empty = document.getElementById('res-empty');
+
+        if (!userId) {
+            showAlert("Session Error", "Please re-login to continue.");
+            return;
+        }
+
+        b.disabled = true;
+        b.innerText = "GENERATING...";
+        img.style.display = 'none';
+        empty.style.display = 'none';
+        ldr.style.display = 'block';
+
+        try {
+            const r = await fetch('/api/images/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: p, userId: userId })
+            });
+            
+            const d = await r.json();
+
+            if(d.success) {
+                img.src = d.imageUrl;
+                img.onload = () => {
+                    img.style.display = 'block';
+                    ldr.style.display = 'none';
+                };
+                init(); 
+            } else {
+                showAlert("Notification", d.message || "An error occurred.");
+                ldr.style.display = 'none';
+                empty.style.display = 'block';
+                init();
+            }
+        } catch(err) {
+            showAlert("Connection Error", "The neural cluster is currently unreachable.");
+            ldr.style.display = 'none';
+            empty.style.display = 'block';
+            b.disabled = false;
+            b.innerText = "Generate";
+        }
+    });
+
+    init();
+</script>
+
+</body>
+</html>
