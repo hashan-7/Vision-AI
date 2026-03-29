@@ -8,6 +8,6 @@ spring.security.oauth2.client.registration.google.client-id=YOUR_GOOGLE_CLIENT_I
 spring.security.oauth2.client.registration.google.client-secret=YOUR_GOOGLE_CLIENT_SECRET
 
 # AI Engine Settings
-h7.ai.engine.url=https://hashan-7-vision-a-engine.hf.space/generate
+h7.ai.engine.url=https://hashan-7-vision-ai-engine.hf.space/generate
 h7.ai.engine.key=YOUR_AI_ENGINE_KEY
 app.image.upload-dir=uploads
