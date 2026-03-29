@@ -1,0 +1,48 @@
+# --- Secret & Config Files ---
+src/main/resources/application.properties
+config_secrets.php
+
+# --- Generated Assets (CRITICAL) ---
+uploads/
+*.png
+*.jpg
+*.jpeg
+
+# --- Compiled Java class files ---
+*.class
+
+# --- Log files ---
+*.log
+
+# --- Package file formats ---
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# --- Maven Build Files ---
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.utils_backup
+pom.xml.v
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# --- IDEs & Editor Files ---
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+bin/
+
+# --- Operating System Files ---
+.DS_Store
+Thumbs.db
