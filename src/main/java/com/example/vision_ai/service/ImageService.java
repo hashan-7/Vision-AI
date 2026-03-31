@@ -6,6 +6,8 @@ import com.example.vision_ai.repository.ImageRepository;
 import com.example.vision_ai.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +40,13 @@ public class ImageService {
     @Value("${app.image.upload-dir}")
     private String uploadDir;
 
+    @EventListener(ApplicationReadyEvent.class)
+    @Transactional
+    public void clearOldDataOnStartup() {
+        System.out.println(">>> Render Restart Detected: Cleaning up old image records...");
+        imageRepository.deleteAll(); 
+    }
+
     @Transactional
     public String generateImage(Long userId, String prompt) {
         User user = userRepository.findById(userId)
@@ -48,9 +57,14 @@ public class ImageService {
         if (user.getDailyCreditsRemaining() <= 0) {
             LocalDateTime refreshTime = user.getLastImageGeneratedAt().plusHours(24);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            throw new RuntimeException("Daily limit reached. Your credits will refresh on: " + refreshTime.format(formatter));
+            throw new RuntimeException("Daily limit reached. Refresh on: " + refreshTime.format(formatter));
         }
 
+        user.setDailyCreditsRemaining(user.getDailyCreditsRemaining() - 1);
+        if (user.getDailyCreditsRemaining() == 0) {
+            user.setLastImageGeneratedAt(LocalDateTime.now());
+        }
+        userRepository.saveAndFlush(user); 
         String cleanUrl = engineUrl.trim();
         if (cleanUrl.contains("=")) {
             cleanUrl = cleanUrl.substring(cleanUrl.lastIndexOf("=") + 1).trim();
@@ -63,26 +77,25 @@ public class ImageService {
             headers.set("Accept", "image/png");
 
             HttpEntity<String> entity = new HttpEntity<>(headers);
-
             String finalUrl = UriComponentsBuilder.fromHttpUrl(cleanUrl)
                     .queryParam("prompt", prompt.trim())
-                    .build()
-                    .toUriString();
+                    .build().toUriString();
 
             ResponseEntity<byte[]> response = restTemplate.exchange(
-                    finalUrl,
-                    HttpMethod.POST,
-                    entity,
-                    byte[].class
+                    finalUrl, HttpMethod.POST, entity, byte[].class
             );
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                return saveImageToDisk(user, prompt, response.getBody());
+                return saveImageToDisk(user.getId(), prompt, response.getBody());
             } else {
-                throw new RuntimeException("AI engine is currently busy. Please try again later.");
+                user.setDailyCreditsRemaining(user.getDailyCreditsRemaining() + 1);
+                userRepository.save(user);
+                throw new RuntimeException("AI engine is busy. Credit refunded.");
             }
 
         } catch (Exception e) {
+            user.setDailyCreditsRemaining(user.getDailyCreditsRemaining() + 1);
+            userRepository.save(user);
             throw new RuntimeException("Generation failed: " + e.getMessage());
         }
     }
@@ -97,7 +110,7 @@ public class ImageService {
         }
     }
 
-    private String saveImageToDisk(User user, String prompt, byte[] imageBytes) throws Exception {
+    private String saveImageToDisk(Long userId, String prompt, byte[] imageBytes) throws Exception {
         String fileName = UUID.randomUUID().toString() + ".png";
         Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
 
@@ -113,18 +126,11 @@ public class ImageService {
         String imageUrl = "/uploads/" + fileName;
 
         Image image = new Image();
-        image.setUserId(user.getId());
+        image.setUserId(userId);
         image.setPrompt(prompt);
         image.setImageUrl(imageUrl);
         imageRepository.save(image);
 
-        user.setDailyCreditsRemaining(user.getDailyCreditsRemaining() - 1);
-        
-        if (user.getDailyCreditsRemaining() == 0) {
-            user.setLastImageGeneratedAt(LocalDateTime.now());
-        }
-
-        userRepository.save(user);
         return imageUrl;
     }
 
