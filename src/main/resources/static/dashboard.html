@@ -17,17 +17,26 @@
             --luxury-line: rgba(255, 255, 255, 0.04);
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
         body {
             background-color: var(--bg-color);
             font-family: 'Plus Jakarta Sans', sans-serif;
             color: var(--accent-white);
-            overflow-x: hidden;
-            background-image: 
+            background-image:
                 linear-gradient(var(--luxury-line) 1px, transparent 1px),
                 linear-gradient(90deg, var(--luxury-line) 1px, transparent 1px);
             background-size: 40px 40px;
             min-height: 100vh;
             position: relative;
+            margin: 0;
         }
 
         .navbar-floating {
@@ -35,8 +44,7 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            width: 90%;
-            max-width: 800px;
+            width: min(90%, 800px);
             z-index: 1000;
             border-radius: 25px;
             background: rgba(255, 255, 255, 0.05);
@@ -59,11 +67,31 @@
             -webkit-text-fill-color: transparent;
             text-transform: lowercase;
             line-height: 1;
+            flex-shrink: 0;
         }
 
-        .nav-links { display: flex; gap: 25px; align-items: center; }
-        .nav-links a { color: var(--muted-gray); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: 0.3s; }
-        .nav-links a:hover, .nav-links a.active { color: #fff; }
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            min-width: 0;
+        }
+
+        .nav-links a {
+            color: var(--muted-gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #fff;
+        }
 
         .bg-blob {
             position: absolute;
@@ -74,8 +102,17 @@
             z-index: -1;
             pointer-events: none;
         }
-        .blob-1 { top: -10%; right: 0; }
-        .blob-2 { bottom: 0; left: -10%; opacity: 0.5; }
+
+        .blob-1 {
+            top: -10%;
+            right: 0;
+        }
+
+        .blob-2 {
+            bottom: 0;
+            left: -10%;
+            opacity: 0.5;
+        }
 
         .liquid-glass {
             background: var(--glass-bg);
@@ -84,6 +121,14 @@
             border: 1px solid var(--glass-border);
             border-radius: 24px;
             padding: 30px;
+            width: 100%;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
         .user-profile img {
@@ -94,6 +139,7 @@
             object-fit: cover;
             aspect-ratio: 1/1;
             background: #222;
+            display: block;
         }
 
         .form-control {
@@ -103,6 +149,7 @@
             border-radius: 15px;
             padding: 15px;
         }
+
         .form-control:focus {
             background: rgba(255,255,255,0.05);
             border-color: rgba(255,255,255,0.3);
@@ -120,10 +167,12 @@
             width: 100%;
             transition: 0.3s;
         }
+
         .gen-btn:hover:not(:disabled) {
             transform: translateY(-3px);
             box-shadow: 0 10px 30px rgba(255,255,255,0.15);
         }
+
         .gen-btn:disabled {
             background: #27272a;
             color: #71717a;
@@ -138,6 +187,7 @@
             justify-content: center;
             position: relative;
         }
+
         #res-img {
             max-width: 100%;
             border-radius: 15px;
@@ -149,6 +199,7 @@
             display: none;
             text-align: center;
         }
+
         .premium-loader {
             width: 60px;
             height: 60px;
@@ -158,6 +209,7 @@
             animation: spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
             margin: 0 auto 20px;
         }
+
         .loader-text {
             font-size: 0.75rem;
             letter-spacing: 3px;
@@ -165,7 +217,11 @@
             font-weight: 600;
             text-transform: uppercase;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
         .credit-badge {
             background: rgba(255,255,255,0.05);
@@ -186,17 +242,137 @@
 
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(0,0,0,0.7);
             backdrop-filter: blur(10px);
             z-index: 2000;
             display: none;
             align-items: center;
             justify-content: center;
+            padding: 16px;
         }
-        .modal-card { max-width: 400px; width: 90%; text-align: center; }
 
-        footer { padding: 40px 0; text-align: center; color: var(--muted-gray); border-top: 1px solid var(--luxury-line); margin-top: 50px; }
+        .modal-card {
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            color: var(--muted-gray);
+            border-top: 1px solid var(--luxury-line);
+            margin-top: 50px;
+        }
+
+        .dashboard-main {
+            padding-top: 220px;
+        }
+
+        @media (max-width: 991.98px) {
+            .dashboard-main .row {
+                justify-content: center;
+            }
+
+            .dashboard-main .col-lg-4,
+            .dashboard-main .col-lg-8 {
+                width: 100%;
+                max-width: 760px;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .navbar-floating {
+                width: calc(100% - 24px);
+                top: 12px;
+                margin-top: 0;
+                padding: 16px 18px;
+                border-radius: 22px;
+                flex-direction: column;
+                gap: 14px;
+                align-items: center;
+            }
+
+            .h7-logo {
+                font-size: 2.4rem;
+            }
+
+            .nav-links {
+                width: 100%;
+                gap: 14px 18px;
+            }
+
+            .nav-links a {
+                font-size: 0.88rem;
+            }
+
+            .dashboard-main {
+                padding-top: 250px;
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+
+            .liquid-glass {
+                padding: 22px 18px;
+                border-radius: 20px;
+            }
+
+            .result-box {
+                min-height: 320px;
+            }
+
+            .credit-badge {
+                font-size: 0.8rem;
+                padding: 5px 12px;
+            }
+
+            footer {
+                padding: 28px 16px;
+                margin-top: 36px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-floating {
+                width: calc(100% - 16px);
+                padding: 14px 14px;
+                border-radius: 20px;
+            }
+
+            .nav-links {
+                gap: 10px 14px;
+            }
+
+            .nav-links a {
+                font-size: 0.82rem;
+            }
+
+            .dashboard-main {
+                padding-top: 262px;
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+
+            .liquid-glass {
+                padding: 18px 14px;
+            }
+
+            .result-box {
+                min-height: 280px;
+            }
+
+            .modal-card {
+                width: 100%;
+            }
+
+            .modal-card .d-flex {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
@@ -215,7 +391,7 @@
         <div class="user-profile"><img id="u-pic" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Profile"></div>
     </nav>
 
-    <main class="container" style="padding-top: 220px;">
+    <main class="container dashboard-main">
         <div class="row g-4">
             <div class="col-lg-4">
                 <div class="liquid-glass h-100">
@@ -288,26 +464,26 @@
         try {
             const r = await fetch('/api/user/success');
             if (!r.ok) throw new Error("Auth required");
-            
+
             const d = await r.json();
-            
+
             if(d.success) {
                 userId = d.userId;
                 const credits = d.credits;
                 const btn = document.getElementById('btn-submit');
                 const hint = document.getElementById('refresh-hint');
                 const profImg = document.getElementById('u-pic');
-                
+
                 document.getElementById('u-credits').innerText = credits;
-                
+
                 if(credits <= 0) {
                     btn.disabled = true;
                     btn.innerText = "Limit Reached";
-                    
+
                     if (d.nextRefreshAt) {
                         const refreshDate = new Date(d.nextRefreshAt);
-                        const formattedTime = refreshDate.toLocaleString('en-US', { 
-                            month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+                        const formattedTime = refreshDate.toLocaleString('en-US', {
+                            month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
                         });
                         hint.innerHTML = `<i class="bi bi-clock-history me-1"></i> Credits refresh on: ${formattedTime}`;
                         hint.style.display = 'block';
@@ -324,11 +500,11 @@
                         this.src = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
                     };
                 }
-            } else { 
-                window.location.href = '/'; 
+            } else {
+                window.location.href = '/';
             }
-        } catch(e) { 
-            window.location.href = '/'; 
+        } catch(e) {
+            window.location.href = '/';
         }
     }
 
@@ -357,7 +533,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ prompt: p, userId: userId })
             });
-            
+
             const d = await r.json();
 
             if(d.success) {
@@ -366,7 +542,7 @@
                     img.style.display = 'block';
                     ldr.style.display = 'none';
                 };
-                init(); 
+                init();
             } else {
                 showAlert("Notification", d.message || "An error occurred.");
                 ldr.style.display = 'none';
@@ -383,7 +559,7 @@
     });
 
     init();
-</script>
+    </script>
 
 </body>
 </html>
