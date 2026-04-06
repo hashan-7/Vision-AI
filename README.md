@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>🌌 Visionary AI Suite</h1>
+  <h1>🌌 Visionary AI </h1>
   <p><strong>Intelligent. Immaculate. Next-Gen AI Synthesis.</strong></p>
 
   <a href="##">
