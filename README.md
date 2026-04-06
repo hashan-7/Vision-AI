@@ -22,7 +22,7 @@
 * **Backend:** Spring Boot 3.4, Spring Security (OAuth2).
 * **Frontend:** Liquid Glassmorphism UI (HTML5, CSS3, JS).
 * **Database:** MySQL (User data & image metadata).
-* * **AI Engine:** Hosted on **[Hugging Face Spaces](https://huggingface.co/spaces/hashan-7/vision-ai-engine)** using REST API.
+* **AI Engine:** Hosted on **[Hugging Face Spaces](https://huggingface.co/spaces/hashan-7/vision-ai-engine)** using REST API.
 
 ### ⚙️ **Setup Instructions**
 1.  Clone: `git clone https://github.com/hashan-7/Vision-AI.git`
