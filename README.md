@@ -30,7 +30,6 @@
 3.  Run: `mvn spring-boot:run`
 
 ---
-
 <div align="center">
 <h3> Developed by h7 💜</h3>
 </div>
